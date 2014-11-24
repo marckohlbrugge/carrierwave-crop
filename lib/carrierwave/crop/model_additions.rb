@@ -75,7 +75,11 @@ module CarrierWave
           h = model.send("#{attachment}_crop_h").to_i
           attachment_instance = model.send(attachment)
 
+          Rails.logger.debug "W H X Y: #{w} #{h} #{x} #{y}"
+
           if self.respond_to? "resize_to_limit"
+
+            Rails.logger.debug "Check 1"
 
             begin
               if width && height
@@ -83,8 +87,10 @@ module CarrierWave
               end
               manipulate! do |img|
                 if attachment_instance.kind_of? CarrierWave::RMagick
+                  Rails.logger.debug "Check 2a"
                   img.crop!(x, y, w, h)
                 elsif attachment_instance.kind_of? CarrierWave::MiniMagick
+                  Rails.logger.debug "Check 2b"
                   img.crop("#{w}x#{h}+#{x}+#{y}")
                   img
                 end
